@@ -20,4 +20,4 @@ EXPOSE 8000
 # Define the command to run your application when the container starts.
 # We use --host 0.0.0.0 to make the server accessible from outside the container.
 # This will be the command that uvicorn runs.
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "main.py"]

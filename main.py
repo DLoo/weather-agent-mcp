@@ -31,4 +31,4 @@ async def get_weather(location: str) -> dict:
                 return {"error": f"Error fetching weather data: {response.status}"}
 
 if __name__ == "__main__":
-    mcp.run(transport="http")
+    mcp.run(transport="http", host="0.0.0.0", port=8000)

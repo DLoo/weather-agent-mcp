@@ -24,6 +24,13 @@ async def main():
         print("\n--- Weather Data ---")
         print(result_london)
         print("--------------------")
+        
+        print("\nFetching weather for Singapore...")
+        result_singapore = await client.call_tool("get_weather", {"location": "Singapore"})
+
+        print("\n--- Weather Data ---")
+        print(result_singapore)
+        print("--------------------")
 
 if __name__ == "__main__":
     asyncio.run(main())

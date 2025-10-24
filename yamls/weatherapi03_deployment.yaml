@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: weather-agent
-        image: donaldloo/weather-agent:v1.4 # Confirm this is your image name
+        image: donaldloo/weather-agent:v1.5 # Confirm this is your image name
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
@@ -39,24 +39,24 @@ spec:
 
         # --- NEW: Health Checks ---
         # Kubernetes uses these probes to check if your application is healthy.
-        livenessProbe:
-          # "Is the application alive?" If this probe fails, Kubernetes will restart the container.
-          httpGet:
-            path: /docs  
-            port: 8000
-          initialDelaySeconds: 15 # Wait 15 seconds after container starts before first probe.
-          periodSeconds: 20       # Check every 20 seconds.
-          timeoutSeconds: 5         # Wait 5 seconds for a response.
-          failureThreshold: 3     # Restart after 3 consecutive failures.
+        # livenessProbe:
+        #   # "Is the application alive?" If this probe fails, Kubernetes will restart the container.
+        #   httpGet:
+        #     path: /docs  
+        #     port: 8000
+        #   initialDelaySeconds: 15 # Wait 15 seconds after container starts before first probe.
+        #   periodSeconds: 20       # Check every 20 seconds.
+        #   timeoutSeconds: 5         # Wait 5 seconds for a response.
+        #   failureThreshold: 3     # Restart after 3 consecutive failures.
 
-        readinessProbe:
-          httpGet:
-            path: /docs
-            port: 8000
-          initialDelaySeconds: 10 # Check readiness a bit sooner than liveness.
-          periodSeconds: 10       # Check more frequently to quickly add/remove from service.
-          timeoutSeconds: 5
-          failureThreshold: 3
+        # readinessProbe:
+        #   httpGet:
+        #     path: /docs
+        #     port: 8000
+        #   initialDelaySeconds: 10 # Check readiness a bit sooner than liveness.
+        #   periodSeconds: 10       # Check more frequently to quickly add/remove from service.
+        #   timeoutSeconds: 5
+        #   failureThreshold: 3
 
 ---
 apiVersion: v1
