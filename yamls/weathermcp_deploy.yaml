@@ -1,0 +1,80 @@
+# mcpo-complete.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mcpo-config
+  namespace: weatherapi
+data:
+  mcpo.json: |
+    {
+      "mcpServers": {
+        "weather_tool_1": {
+          "name": "Weather_Tool",
+          "description": "A tool to get the current weather for any city in the world.",
+          "type": "streamable-http",
+          "url": "http://weather-agent-service.weatherapi.svc.cluster.local:8000/openapi.json",
+        }
+      }
+    }
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcpo-deployment
+  namespace: weatherapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcpo
+  template:
+    metadata:
+      labels:
+        app: mcpo
+    spec:
+      containers:
+      - name: mcpo
+        image: ghcr.io/open-webui/mcpo:latest
+        ports:
+        - containerPort: 8000
+        command:
+          - "mcpo"
+          - "serve"
+          - "--config"
+          - "/config/mcpo.json"
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config
+          readOnly: true
+        resources:
+          requests: {cpu: "50m", memory: "64Mi"}
+          limits: {cpu: "100m", memory: "128Mi"}
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      volumes:
+      - name: config-volume
+        configMap:
+          name: mcpo-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcpo-service
+  namespace: weatherapi
+spec:
+  selector:
+    app: mcpo
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
